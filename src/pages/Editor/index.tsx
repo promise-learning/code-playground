@@ -1,10 +1,10 @@
 import React from 'react';
-import { Textarea } from '@chakra-ui/core';
+import CodeEditor from '../../components/CodeEditor';
 
 const Editor = () => {
 	return (
 		<React.Fragment>
-			<Textarea placeholder="Editor" />
+			<CodeEditor />
 		</React.Fragment>
 	);
 };
