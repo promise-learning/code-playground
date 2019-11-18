@@ -6,6 +6,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteWebPackPlugin = require('write-file-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const { NODE_ENV } = process.env;
 
@@ -20,9 +21,14 @@ const plugins = [
 		alwaysWriteToDisk: true,
 	}),
 	new HtmlWebpackHarddiskPlugin(),
-	new CopyWebpackPlugin(['./public/favicon.ico', './public/manifest.json']),
+	new CopyWebpackPlugin([
+		'./public/favicon.ico',
+		'./public/manifest.json',
+		'./node_modules/onigasm/lib/onigasm.wasm',
+	]),
 	new WriteWebPackPlugin(),
 	new Dotenv(),
+	new MonacoWebpackPlugin(),
 ];
 
 const isDevelopment = NODE_ENV === 'development';
