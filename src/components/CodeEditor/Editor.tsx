@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { liftOff } from './token-config';
-import monokai from './theme.json';
+import cobalt from './theme.json';
 
 interface EditorProps {
 	value: string;
@@ -50,7 +50,7 @@ class Editor extends Component<EditorProps> {
 	initEditor = async () => {
 		const node = this.editorRef.current;
 		const { language, value } = this.props;
-		const colors = monokai.colors;
+		const colors = cobalt.colors;
 		const newColors = colors;
 		Object.keys(colors).forEach(c => {
 			if (newColors[c]) return c;
@@ -60,7 +60,6 @@ class Editor extends Component<EditorProps> {
 			return c;
 		});
 		if (node) {
-			await liftOff(monaco);
 			monaco.editor.create(node, {
 				value,
 				language,
@@ -68,11 +67,12 @@ class Editor extends Component<EditorProps> {
 			monaco.editor.defineTheme('myCustomTheme', {
 				base: 'vs-dark',
 				inherit: true,
-				rules: tokenizeStringRules(monokai.tokenColors),
+				rules: tokenizeStringRules(cobalt.tokenColors),
 				colors,
 			});
 
 			monaco.editor.setTheme('myCustomTheme');
+			await liftOff(monaco);
 		}
 	};
 
