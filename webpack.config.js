@@ -61,15 +61,7 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [
-					{
-						loader: 'style-loader',
-						options: {
-							insertAt: 'top',
-						},
-					},
-					'css-loader',
-				],
+				use: ['style-loader', 'css-loader'],
 			},
 			{
 				test: /\.svg$/,

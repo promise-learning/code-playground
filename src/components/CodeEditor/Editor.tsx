@@ -60,7 +60,6 @@ class Editor extends Component<EditorProps> {
 			return c;
 		});
 		if (node) {
-			await liftOff(monaco);
 			monaco.editor.create(node, {
 				value,
 				language,
@@ -73,6 +72,7 @@ class Editor extends Component<EditorProps> {
 			});
 
 			monaco.editor.setTheme('myCustomTheme');
+			await liftOff(monaco);
 		}
 	};
 
