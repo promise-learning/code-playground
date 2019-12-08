@@ -2,9 +2,9 @@ import { loadWASM } from 'onigasm';
 import { Registry } from 'monaco-textmate';
 import { wireTmGrammars } from 'monaco-editor-textmate';
 
-import cssGrammar from 'raw-loader!./tm-grammars/css.json.tmLanguage';
-import htmlGrammar from 'raw-loader!./tm-grammars/html.json.tmLanguage';
-import tsGrammar from 'raw-loader!./tm-grammars/TypeScriptReact.tmLanguage';
+import cssGrammar from './tm-grammars/css.json';
+import htmlGrammar from './tm-grammars/html.json';
+import tsGrammar from './tm-grammars/typescript.json';
 
 let grammarsLoaded = false;
 
@@ -31,7 +31,7 @@ export async function liftOff(monaco: any) {
 			}
 
 			return {
-				format: 'plist',
+				format: 'json',
 				content: tsGrammar,
 			};
 		},
