@@ -1,6 +1,5 @@
 import React, { Component, createRef } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { Button } from '@chakra-ui/core';
 
 import { liftOff } from './token-config';
 import cobalt from './theme.json';
@@ -77,8 +76,9 @@ class Editor extends Component<EditorProps, EditorState> {
 	};
 
 	initEditor = async () => {
-		const node = this.editorRef.current;
-		const { language, value } = this.props;
+		const self = this;
+		const node = self.editorRef.current;
+		const { language, value } = self.props;
 		const colors = cobalt.colors;
 		const newColors = colors;
 		Object.keys(colors).forEach(c => {
@@ -106,18 +106,18 @@ class Editor extends Component<EditorProps, EditorState> {
 			model.onDidChangeContent(() => {
 				this.onValueChange(model.getValue());
 			});
+			editor.addCommand(
+				monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+				() => {
+					self.onSave();
+				},
+			);
 			await liftOff(monaco);
 		}
 	};
 
 	render() {
-		return (
-			<div>
-				<div style={{ height: '70vh' }} ref={this.editorRef} />
-				<br />
-				<Button onClick={this.onSave}>Save File</Button>
-			</div>
-		);
+		return <div style={{ height: '70vh' }} ref={this.editorRef} />;
 	}
 }
 
