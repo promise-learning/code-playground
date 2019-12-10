@@ -1,12 +1,20 @@
 import React, { Component, createRef } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
 import { liftOff } from './token-config';
 import cobalt from './theme.json';
+import saveFile from '../../apis/save-file';
 
 interface EditorProps {
 	value: string;
 	language: string;
 	theme: string;
+	filePath: string;
+	project: string;
+}
+
+interface EditorState {
+	value: string;
 }
 
 const tokenizeStringRules = tokenColors =>
@@ -35,21 +43,42 @@ const tokenizeStringRules = tokenColors =>
 			return [...acc, ...allRules];
 		}, []);
 
-class Editor extends Component<EditorProps> {
+class Editor extends Component<EditorProps, EditorState> {
 	private editorRef = createRef<HTMLDivElement>();
 	static defaultProps = {
 		value: '',
-		language: 'javascript',
+		filePath: 'index.ts',
+		project: 'sandbox',
+		language: 'typescript',
 		theme: 'vs-dark',
+	};
+
+	state = {
+		value: this.props.value,
 	};
 
 	componentDidMount() {
 		this.initEditor();
 	}
 
+	onValueChange = (value: string) => {
+		this.setState({ value });
+	};
+
+	onSave = async () => {
+		try {
+			const { filePath, project } = this.props;
+			const { value } = this.state;
+			await saveFile(project, filePath, value);
+		} catch (e) {
+			console.error(e);
+		}
+	};
+
 	initEditor = async () => {
-		const node = this.editorRef.current;
-		const { language, value } = this.props;
+		const self = this;
+		const node = self.editorRef.current;
+		const { language, value } = self.props;
 		const colors = cobalt.colors;
 		const newColors = colors;
 		Object.keys(colors).forEach(c => {
@@ -60,7 +89,8 @@ class Editor extends Component<EditorProps> {
 			return c;
 		});
 		if (node) {
-			monaco.editor.create(node, {
+			const model = monaco.editor.createModel(value, language);
+			const editor = monaco.editor.create(node, {
 				value,
 				language,
 			});
@@ -72,6 +102,16 @@ class Editor extends Component<EditorProps> {
 			});
 
 			monaco.editor.setTheme('myCustomTheme');
+			editor.setModel(model);
+			model.onDidChangeContent(() => {
+				this.onValueChange(model.getValue());
+			});
+			editor.addCommand(
+				monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+				() => {
+					self.onSave();
+				},
+			);
 			await liftOff(monaco);
 		}
 	};
