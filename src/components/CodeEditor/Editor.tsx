@@ -1,9 +1,10 @@
 import React, { Component, createRef } from 'react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { Select } from '@chakra-ui/core';
 
 import { liftOff } from './token-config';
-import cobalt from './theme.json';
 import saveFile from '../../apis/save-file';
+import { getMonacoTheme } from './getMonacoTheme';
 
 interface EditorProps {
 	value: string;
@@ -17,32 +18,6 @@ interface EditorState {
 	value: string;
 }
 
-const tokenizeStringRules = tokenColors =>
-	tokenColors
-		.filter(token => token.scope && token.settings)
-		.reduce((acc, token) => {
-			const tokenSettings = {
-				foreground: token.settings.foreground,
-				background: token.settings.background,
-				fontStyle: token.settings.fontStyle,
-			};
-			if (typeof token.scope === 'string') {
-				const allScopes = token.scope.split(',');
-
-				const allRules = allScopes.map(item => ({
-					token: item,
-					...tokenSettings,
-				}));
-
-				return [...acc, ...allRules];
-			}
-			const allRules = token.scope.map(item => ({
-				token: item,
-				...tokenSettings,
-			}));
-			return [...acc, ...allRules];
-		}, []);
-
 class Editor extends Component<EditorProps, EditorState> {
 	private editorRef = createRef<HTMLDivElement>();
 	static defaultProps = {
@@ -55,6 +30,8 @@ class Editor extends Component<EditorProps, EditorState> {
 
 	state = {
 		value: this.props.value,
+		loadingTheme: true,
+		theme: 'cobalt',
 	};
 
 	componentDidMount() {
@@ -75,33 +52,32 @@ class Editor extends Component<EditorProps, EditorState> {
 		}
 	};
 
+	setLoadingTheme = () => {
+		this.setState(prevState => ({
+			loadingTheme: !prevState.loadingTheme,
+		}));
+	};
+
 	initEditor = async () => {
 		const self = this;
 		const node = self.editorRef.current;
 		const { language, value } = self.props;
-		const colors = cobalt.colors;
-		const newColors = colors;
-		Object.keys(colors).forEach(c => {
-			if (newColors[c]) return c;
-
-			delete newColors[c];
-
-			return c;
-		});
 		if (node) {
 			const model = monaco.editor.createModel(value, language);
 			const editor = monaco.editor.create(node, {
 				value,
 				language,
+				minimap: {
+					enabled: false,
+				},
 			});
-			monaco.editor.defineTheme('myCustomTheme', {
-				base: 'vs-dark',
+			const theme = await getMonacoTheme('cobalt');
+			monaco.editor.defineTheme('cobalt', {
 				inherit: true,
-				rules: tokenizeStringRules(cobalt.tokenColors),
-				colors,
+				...theme,
 			});
 
-			monaco.editor.setTheme('myCustomTheme');
+			monaco.editor.setTheme('cobalt');
 			editor.setModel(model);
 			model.onDidChangeContent(() => {
 				this.onValueChange(model.getValue());
@@ -113,11 +89,50 @@ class Editor extends Component<EditorProps, EditorState> {
 				},
 			);
 			await liftOff(monaco);
+			this.setLoadingTheme();
+		}
+	};
+
+	setNewTheme = async themeName => {
+		const theme = await getMonacoTheme(themeName);
+		monaco.editor.defineTheme(themeName, {
+			inherit: true,
+			...theme,
+		});
+
+		monaco.editor.setTheme(themeName);
+	};
+
+	handleThemeSelect = e => {
+		const theme = e.target.value;
+		if (theme) {
+			this.setState(
+				{
+					theme,
+				},
+				() => this.setNewTheme(theme),
+			);
 		}
 	};
 
 	render() {
-		return <div style={{ height: '70vh' }} ref={this.editorRef} />;
+		const { theme, loadingTheme } = this.state;
+		return (
+			<React.Fragment>
+				<Select
+					value={theme}
+					placeholder="Select option"
+					onChange={this.handleThemeSelect}
+				>
+					<option value="cobalt">Cobalt</option>
+					<option value="dracula">Dracula</option>
+					<option value="night-owl">Night Owl</option>
+					<option value="shades-of-purple">Shades of Purple</option>
+				</Select>
+				{loadingTheme ? 'Applying theme' : null}
+				<div style={{ height: '70vh' }} ref={this.editorRef} />
+			</React.Fragment>
+		);
 	}
 }
 
