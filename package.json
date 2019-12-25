@@ -69,6 +69,7 @@
 		"@chakra-ui/core": "^0.4.1",
 		"@emotion/core": "^10.0.22",
 		"@emotion/styled": "^10.0.23",
+		"color": "^3.1.2",
 		"emotion-theming": "^10.0.19",
 		"monaco-editor": "^0.18.1",
 		"monaco-editor-textmate": "^2.2.1",
