@@ -75,8 +75,8 @@
 		"monaco-editor-textmate": "^2.2.1",
 		"monaco-textmate": "^3.0.1",
 		"onigasm": "^2.2.4",
-		"overmind": "^20.0.0",
-		"overmind-react": "^21.0.0",
+		"overmind": "^21.0.0",
+		"overmind-react": "^22.0.0",
 		"react": "^16.12.0",
 		"react-dom": "^16.12.0",
 		"react-router-dom": "^5.1.2"

@@ -7,7 +7,7 @@ import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 
 import App from './pages';
 
-import { overmindConfig } from './overmind';
+import { overmindConfig } from './overmind-state';
 
 const value = createOvermind(overmindConfig, {
 	devtools: 'localhost:3031',
