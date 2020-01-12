@@ -43,6 +43,5 @@ export async function liftOff(monaco: any) {
 	grammars.set('html', 'text.html.basic');
 	grammars.set('typescript', 'source.tsx');
 	grammars.set('javascript', 'source.js');
-
 	await wireTmGrammars(monaco, registry, grammars);
 }
