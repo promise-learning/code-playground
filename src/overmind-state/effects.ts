@@ -1,10 +1,9 @@
+import { defaultFiles } from '../constant';
+
 export const getData = () => {
 	return new Promise(resolve => {
 		resolve({
-			files: {
-				'src/index.ts': `console.log('hello world')\nconsole.log('foo bar')`,
-				'src/components/index.ts': `console.log('component')`,
-			},
+			files: defaultFiles,
 			entryPoint: 'src/index.ts',
 		});
 	});
