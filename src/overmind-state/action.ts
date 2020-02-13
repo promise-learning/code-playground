@@ -1,11 +1,14 @@
 import { AsyncAction } from 'overmind';
+import { getParsedFilesAndFolders } from '../utils';
 
 export const getData: AsyncAction = async ({ state, effects }) => {
 	const data = await effects.getData();
+	const appData = getParsedFilesAndFolders(Object.keys(data.files));
 	state.data = {
 		isLoading: false,
 		...data,
 	};
+	state.app = appData;
 	state.currentFile = data.entryPoint || '';
 };
 
