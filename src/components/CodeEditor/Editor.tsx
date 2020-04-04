@@ -25,6 +25,7 @@ const Editor = (props: EditorProps) => {
 			const { language, value } = props;
 			if (node) {
 				const model = monaco.editor.createModel(value, language);
+				console.log('here', model);
 				const editor = monaco.editor.create(node, {
 					value,
 					language,
@@ -50,7 +51,7 @@ const Editor = (props: EditorProps) => {
 			}
 		};
 		init();
-	}, [props.value, props.language]);
+	}, []);
 
 	const setNewTheme = async themeName => {
 		setTheme(themeName);
@@ -99,9 +100,9 @@ const Editor = (props: EditorProps) => {
 };
 
 Editor.defaultProps = {
-	language: 'typescript',
+	language: 'javascript',
 	value: '',
-	filePath: 'src/index.ts',
+	filePath: 'src/index.js',
 };
 
 export default Editor;

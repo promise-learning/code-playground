@@ -21,7 +21,7 @@ export const saveFile: AsyncAction<SaveFileData> = async (
 	{ state },
 	payload,
 ) => {
-	// filename could be `src/index.ts`
+	// filename could be `src/index.js`
 	const { fileName, content } = payload;
 	state.data = {
 		...state.data,
