@@ -25,7 +25,6 @@ const Editor = (props: EditorProps) => {
 			const { language, value } = props;
 			if (node) {
 				const model = monaco.editor.createModel(value, language);
-				console.log('here', model);
 				const editor = monaco.editor.create(node, {
 					value,
 					language,
