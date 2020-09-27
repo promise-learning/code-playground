@@ -4,7 +4,7 @@ export const getData = () => {
 	return new Promise(resolve => {
 		resolve({
 			files: defaultFiles,
-			entryPoint: 'src/index.ts',
+			entryPoint: 'src/index.js',
 		});
 	});
 };

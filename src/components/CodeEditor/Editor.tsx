@@ -50,7 +50,7 @@ const Editor = (props: EditorProps) => {
 			}
 		};
 		init();
-	}, [props.value, props.language]);
+	}, []);
 
 	const setNewTheme = async themeName => {
 		setTheme(themeName);
@@ -99,9 +99,9 @@ const Editor = (props: EditorProps) => {
 };
 
 Editor.defaultProps = {
-	language: 'typescript',
+	language: 'javascript',
 	value: '',
-	filePath: 'src/index.ts',
+	filePath: 'src/index.js',
 };
 
 export default Editor;

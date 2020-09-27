@@ -13,7 +13,7 @@ export const state: StateType = {
 	currentFile: '',
 	data: {
 		isLoading: true,
-		entryPoint: '',
+		entryPoint: 'src/index.js',
 		files: {},
 	},
 };
